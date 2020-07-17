@@ -65,6 +65,10 @@ To interpret any data on confirmed cases we need to know how much testing for CO
 def country_details(d,countrys):
     a3=str(d['iso_code'].values).strip('[]').strip("''").lower()
     ind = pycountry.countries.get(alpha_3=a3).alpha_2.lower()
+    if ind =='au':
+        ind='at'
+    elif ind=='at':
+        ind='au'
     response = requests.get('https://www.worldometers.info/img/flags/{}-flag.gif'.format(ind))
     img = Image.open(BytesIO(response.content))
     img=img.convert('RGB')
@@ -106,7 +110,6 @@ def country(countrys):
     if st.checkbox("Show raw data", False):
         st.subheader("Raw data of {} from {} to {}".format(countrys,start_date,end_date))
         st.dataframe(d.fillna('Not available'))
-@st.cache(suppress_st_warning=True)
 def map(s,t,by,on):
     k=np.log(s[t])
     options = ("orthographic","equirectangular")
@@ -284,8 +287,8 @@ if k:
         fig_l.update_layout(barmode='group')
         st.plotly_chart(fig_l)
         st.markdown('### Trend of Total Cases per million')
-        d1=data[data['location']==country_1]
-        d2=data[data['location']==country_2]
+        d1=data.loc[data['location'] == country_1]
+        d2=data.loc[data['location'] == country_2]
         y_2=d1['total_cases_per_million']
         y_3=d2['total_cases_per_million']
         d1['ndate'] = pd.to_datetime(d1['date'])
