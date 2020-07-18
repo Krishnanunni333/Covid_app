@@ -266,6 +266,7 @@ if c:
     option=option[:len(option)-2]
     countrys = st.sidebar.selectbox('Select Country',option)
     country(countrys)
+st.markdown("## Select below to compare two countries")
 k=st.checkbox('Compare Two Countries')
 if k:
     option=list(data.location.unique())
