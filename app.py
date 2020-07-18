@@ -18,7 +18,6 @@ img=img.convert('RGB')
 newsize = (300, 200) 
 img = img.resize(newsize)
 st.image(img)
-st.header(':earth_asia:')
 st.title(" **COVID-19 WEB APP** ")
 st.header("This application is a Streamlit dashboard that can be used "
             "to analyze COVID-19 data across the world :mask:.")
@@ -119,7 +118,7 @@ def country(countrys):
         dataframe.style.highlight_max(axis=0)
         st.dataframe(d..style.highlight_max(axis=0).fillna('Not available'))
 def map(s,t,by,on):
-    st.markdown(' * The value while hovering over the countries are log values of actual numebers. This is to get an accurate and understandale seperation from all the countries')
+    st.text(' *The value while hovering over the countries are log values of actual numebers. This is to get an accurate and understandale seperation from all the countries.')
     k=np.log(s[t])
     options = ("orthographic","equirectangular")
     a = st.empty()
