@@ -12,6 +12,12 @@ from io import BytesIO
 import pycountry
 covid = Covid()
 covid_2 = Covid(source="worldometers")
+response = requests.get('https://phil.cdc.gov//PHIL_Images/23312/23312_lores.jpg')
+img = Image.open(BytesIO(response.content))
+img=img.convert('RGB')
+newsize = (300, 200) 
+img = img.resize(newsize)
+st.image(img)
 st.header(':earth_asia:')
 st.title(" **COVID-19 WEB APP** ")
 st.header("This application is a Streamlit dashboard that can be used "
@@ -110,7 +116,8 @@ def country(countrys):
     
     if st.checkbox("Show raw data", False):
         st.subheader("Raw data of {} from {} to {}".format(countrys,start_date,end_date))
-        st.dataframe(d.fillna('Not available'))
+        dataframe.style.highlight_max(axis=0)
+        st.dataframe(d..style.highlight_max(axis=0).fillna('Not available'))
 def map(s,t,by,on):
     st.markdown(' * The value while hovering over the countries are log values of actual numebers. This is to get an accurate and understandale seperation from all the countries')
     k=np.log(s[t])
