@@ -234,7 +234,7 @@ def daily():
     st.markdown('## <span style="color:#022F84 "><b> {} </b> total cases</span>'.format(int(present[present['location']=='World'].values[0]    [4])),unsafe_allow_html=True)
     st.markdown('## <span style="color:#B10618 "><b> {} </b> total deaths</span>'.format(int(present[present['location']=='World'].values[0][6])),unsafe_allow_html=True)
     st.markdown('## <span style="color:#07860E"><b> {} </b> total recovered</span>'.format(covid.get_total_recovered()),unsafe_allow_html=True)
-    st.markdown('## <span style="color:#73257A "><b> {} </b> total active cases</  span>'.format(covid.get_total_active_cases()),unsafe_allow_html=True)  
+    st.markdown('## <span style="color:#73257A "><b> {} </b> total active cases</span>'.format(covid.get_total_active_cases()),unsafe_allow_html=True)  
     present=data[data['date']==yesterday.strftime('%Y-%m-%d')]
     st.sidebar.markdown('## **Top 5 countries based number of confirmed cases as of {}**'.format(yesterday))
     st.sidebar.table((present.sort_values('total_cases',ascending = False)[['location','total_cases']]).set_index('location').iloc[1:6,:])
