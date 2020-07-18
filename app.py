@@ -112,6 +112,7 @@ def country(countrys):
         st.subheader("Raw data of {} from {} to {}".format(countrys,start_date,end_date))
         st.dataframe(d.fillna('Not available'))
 def map(s,t,by,on):
+    st.markdown(' * The value while hovering over the countries are log values of actual numebers. This is to get an accurate and understandale seperation from all the countries')
     k=np.log(s[t])
     options = ("orthographic","equirectangular")
     a = st.empty()
@@ -120,7 +121,7 @@ def map(s,t,by,on):
     locations = s['iso_code'],
     z = k,
     text = s['location'],
-    colorscale = 'Reds',
+    colorscale = 'Blues',
     autocolorscale=False,
     reversescale=True,
     marker_line_color='darkgray',
@@ -318,7 +319,7 @@ if c:
     option=option[:len(option)-2]
     countrys = st.sidebar.selectbox('Select Country',option)
     country(countrys)
-st.markdown('### Check below for comapring two countries')
+st.markdown('### Check below for comparing two countries')
 k=st.checkbox('Compare Two Countries')
 if k:
     option=list(data.location.unique())
