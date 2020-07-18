@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-from datetime import date
+from datetime import date, timedelta
 import datetime
 import plotly.graph_objects as go
 from covid import Covid
@@ -55,51 +55,52 @@ This means that the counts of confirmed cases depend on how much a country actua
 Testing is our window onto the pandemic and how it is spreading. Without data on who is infected by the virus we have no way of understanding the pandemic. Without this data we can not know which countries are doing well, and which are just underreporting cases and deaths.
 
 To interpret any data on confirmed cases we need to know how much testing for COVID-19 the country actually does.'''
-    y_3=np.log(d['new_tests'])
-    if y_3.isnull().sum()==len(y_3):
+    y_3=np.sqrt(d['new_tests'])
+    if np.sum(y_3)==0:
         st.markdown('<i>No data is available on new testing for {} .</i>'.format(countrys),unsafe_allow_html=True)
     else:
         fig = px.bar(d, x='date', y='new_tests')
         st.plotly_chart(fig)
     st.markdown(html, unsafe_allow_html=True)
-def country_details(d,countrys):
-    a3=str(d['iso_code'].values).strip('[]').strip("''").lower()
-    ind = pycountry.countries.get(alpha_3=a3).alpha_2.lower()
-    if ind =='au':
-        ind='at'
-    elif ind=='at':
-        ind='au'
-    response = requests.get('https://www.worldometers.info/img/flags/{}-flag.gif'.format(ind))
+def country_details(t):
+    ind=t['iso_code'].values[1].strip("''").lower()
+    response = requests.get('https://raw.githubusercontent.com/adamoliver/Country-Flags-ISO-3/master/gif/{}.gif'.format(ind))
     img = Image.open(BytesIO(response.content))
     img=img.convert('RGB')
-    newsize = (300, 200) 
+    newsize = (40, 20) 
     img = img.resize(newsize)
     st.image(img)
-    d.fillna('Not Available',inplace=True)
     st.markdown('**_All data as of_** : {}'.format(recent_date.strftime('%Y-%m-%d')))
-    st.markdown('**Covid-19 Death rate** : {}'.format(str(d['cvd_death_rate'].values).strip('[]')))
-    st.markdown('**Total cases** : {}'.format(covid.get_status_by_country_name(countrys)['confirmed']))
-    st.markdown('**Active cases** : {}'.format(covid.get_status_by_country_name(countrys)['active']))
-    st.markdown('**Deaths** : {}'.format(covid.get_status_by_country_name(countrys)['deaths']))
-    st.markdown('**Recovered** : {}'.format(covid.get_status_by_country_name(countrys)['recovered']))
-    st.markdown('**Total Tests** : {}'.format(covid_2.get_status_by_country_name(countrys)['total_tests']))
-    st.markdown('**Critical** : {}'.format(covid_2.get_status_by_country_name(countrys)['critical']))
-    st.markdown('**GDP per Capita** : {}'.format(str(d['gdp_per_capita'].values).strip('[]')))
-    st.markdown('**Population** : {}'.format(str(d['population'].values).strip('[]')))
-    st.markdown('**Population density** : {}'.format(str(d['population_density'].values).strip('[]')))
-    st.markdown('**Median Age** : {}'.format(str(d['median_age'].values).strip('[]')))
-    st.markdown('**Aged 65 older** : {}'.format(str(d['aged_65_older'].values).strip('[]')))
-    st.markdown('**Aged 70 older** : {}'.format(str(d['aged_70_older'].values).strip('[]')))
+    st.markdown('**Covid-19 Death rate** : {}'.format(np.array(t['cvd_death_rate'].dropna())[-1]))
+    st.markdown('**Cumilative cases** : {}'.format(np.max(t['total_cases'].dropna())))
+    st.markdown('**Cumilative deaths** : {}'.format(np.max(t['total_deaths'].dropna())))
+    st.markdown('**Cumilative Tests** : {}'.format(np.max(t['total_tests'].dropna())))
+    st.markdown('**Total test Units** : {}'.format(np.max(t['tests_units'].dropna())))
+    st.markdown('**Stringency index** : {}'.format(np.array(t['stringency_index'].fillna('Information not availale'))[-1]))
+    st.markdown('**Handwashing facilities** : {}'.format(np.array(t['handwashing_facilities'].fillna('Information not availale'))[-1]))
+    st.markdown('**Hospital beds per thousand** : {}'.format(np.array(t['hospital_beds_per_thousand'].fillna('Information not availale'))[-1]))
+    st.markdown('**Life expectancy** : {}'.format(np.array(t['life_expectancy'].dropna())[-3]))
+    st.markdown('**GDP per Capita** : {}'.format(np.array(t['gdp_per_capita'].dropna())[-3]))
+    st.markdown('**Population** : {}'.format(np.array(t['population'].dropna())[-3]))
+    st.markdown('**Population density** : {}'.format(np.array(t['population_density'].dropna())[-3]))
+    st.markdown('**Median Age** : {}'.format(np.array(t['median_age'].dropna())[-3]))
+    st.markdown('**Diabetes prevalence** : {}'.format(np.array(t['diabetes_prevalence'].dropna())[-3]))
+    st.markdown('**Female smokers** : {}'.format(np.array(t['female_smokers'].fillna('Information not availale'))[-3]))
+    st.markdown('**Male smokers** : {}'.format(np.array(t['male_smokers'].fillna('Information not availale'))[-1]))
+    st.markdown('**Aged 65 older** : {}'.format(np.array(t['aged_65_older'].fillna('Information not availale'))[-1]))
+    st.markdown('**Aged 70 older** : {}'.format(np.array(t['aged_70_older'].fillna('Information not availale'))[-1]))
+    st.markdown('**Extreme poverty** : {}'.format(np.array(t['extreme_poverty'].fillna('Information not availale'))[-1]))
 def country(countrys):
     d=data[data['location']==countrys]
     st.subheader('Country wise analysis')
     st.markdown('## <span style="color:#782612  ">{}</span> '.format(countrys),unsafe_allow_html=True)
+    #recent_date =pd.to_datetime(d['date']).max()
     start_date = st.sidebar.date_input('Start date',datetime.datetime(2019,12,31))
     end_date= st.sidebar.date_input('End date',recent_date)
     d['ndate'] = pd.to_datetime(d['date'])
     d=d[d['ndate'] >= pd.to_datetime(start_date)]
     d=d[d['ndate'] <= pd.to_datetime(end_date)]
-    country_details(d[d['date']==date],countrys)
+    country_details(d)
     st.markdown(' #### Comparison between total cases and total deaths of {} from {} to {}  '.format(countrys,start_date,end_date))
     total_cases_total_deaths(d)
     st.markdown(' #### Comparison between new cases and new deaths of {} from {} to {}  '.format(countrys,start_date,end_date))
@@ -226,14 +227,65 @@ def basis_case(s,on,date):
         st.markdown('New deaths  :-{}'.format(np.sum(s['new_deaths'])))
         find_case(s,on,1)
 recent_date =pd.to_datetime(data['date']).max()
-present=data[data['date']==recent_date.strftime('%Y-%m-%d')]
-st.markdown('# <span style="color:#3D3B15 "><b>World Today</b></span>',unsafe_allow_html=True)
-st.markdown('## <span style="color:#022F84 "><b> {} </b> total cases</span>'.format(int(present[present['location']=='World'].values[0][4])),unsafe_allow_html=True)
-st.markdown('## <span style="color:#B10618 "><b> {} </b> total deaths</span>'.format(int(present[present['location']=='World'].values[0][6])),unsafe_allow_html=True)
-st.markdown('## <span style="color:#07860E"><b> {} </b> total recovered</span>'.format(covid.get_total_recovered()),unsafe_allow_html=True)
-st.markdown('## <span style="color:#73257A "><b> {} </b> total active cases</span>'.format(covid.get_total_active_cases()),unsafe_allow_html=True)
-st.sidebar.markdown('## **Top 5 countries based number of confirmed cases**')
-st.sidebar.table((present.sort_values('total_cases',ascending = False)[['location','total_cases']]).set_index('location').iloc[1:6,:])
+yesterday = date.today() - timedelta(days=1)
+def daily():
+    present=data[data['date']==recent_date.strftime('%Y-%m-%d')]
+    st.markdown('# <span style="color:#3D3B15 "><b>World Today</b></span>',unsafe_allow_html=True)
+    st.markdown('## <span style="color:#022F84 "><b> {} </b> total cases</span>'.format(int(present[present['location']=='World'].values[0]    [4])),unsafe_allow_html=True)
+    st.markdown('## <span style="color:#B10618 "><b> {} </b> total deaths</span>'.format(int(present[present['location']=='World'].values[0][6])),unsafe_allow_html=True)
+    st.markdown('## <span style="color:#07860E"><b> {} </b> total recovered</span>'.format(covid.get_total_recovered()),unsafe_allow_html=True)
+    st.markdown('## <span style="color:#73257A "><b> {} </b> total active cases</  span>'.format(covid.get_total_active_cases()),unsafe_allow_html=True)  
+    present=data[data['date']==yesterday.strftime('%Y-%m-%d')]
+    st.sidebar.markdown('## **Top 5 countries based number of confirmed cases as of {}**'.format(yesterday))
+    st.sidebar.table((present.sort_values('total_cases',ascending = False)[['location','total_cases']]).set_index('location').iloc[1:6,:])
+daily()
+def compare_country(country_1,country_2):
+    st.markdown("## Comparison between {} and {}".format(country_1,country_2))
+    d1=data.loc[data['location'] == country_1]
+    d2=data.loc[data['location'] == country_2]
+    y1=[np.max(d1['total_cases'].dropna()),np.max(d1['total_deaths'].dropna()),np.max(d1['total_tests'].dropna())]
+    y2=[np.max(d2['total_cases'].dropna()),np.max(d2['total_deaths'].dropna()),np.max(d2['total_tests'].dropna())]
+    y1=np.log(y1)
+    y2=np.log(y2)
+    fig_l = go.Figure(data=[
+    go.Bar(name=country_1, x=['Total cases','Total deaths','Total tests'], y=y1),
+    go.Bar(name=country_2, x=['Total cases','Total deaths','Total tests'], y=y2)
+     ])
+    fig_l.update_layout(barmode='group')
+    st.plotly_chart(fig_l)
+    st.markdown('### Trend of Total Cases per million')
+    y_2=d1['total_cases_per_million']
+    y_3=d2['total_cases_per_million']
+    d1['ndate'] = pd.to_datetime(d1['date'])
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=d1['ndate'], y=y_2,
+                    mode='lines',
+                    name=country_1,fill='tonexty'))
+    fig.add_trace(go.Scatter(x=d1['ndate'], y=y_3,
+                    mode='lines', name=country_2,fill='tozeroy'))
+    st.plotly_chart(fig)
+    st.markdown('### Trend of Total Deaths per million')
+    y_2=d1['total_deaths_per_million']
+    y_3=d2['total_deaths_per_million']
+    d1['ndate'] = pd.to_datetime(d1['date'])
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=d1['ndate'], y=y_2,
+                    mode='lines',
+                    name=country_1,fill='tonexty'))
+    fig.add_trace(go.Scatter(x=d1['ndate'], y=y_3,
+                    mode='lines', name=country_2,fill='tozeroy'))
+    st.plotly_chart(fig)
+    st.markdown('### Trend of Total Tests per thousand')
+    y_2=d1['total_tests_per_thousand']
+    y_3=d2['total_tests_per_thousand']
+    d1['ndate'] = pd.to_datetime(d1['date'])
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=d1['ndate'], y=y_2,
+                    mode='lines',
+                    name=country_1,fill='tonexty'))
+    fig.add_trace(go.Scatter(x=d1['ndate'], y=y_3,
+                    mode='lines', name=country_2,fill='tozeroy'))
+    st.plotly_chart(fig)
 st.markdown('## <span style="color:#021868">Data Explorer</span>',unsafe_allow_html=True)
 st.markdown('### Metric')
 date = st.date_input('Select date for the map',recent_date)
@@ -266,6 +318,7 @@ if c:
     option=option[:len(option)-2]
     countrys = st.sidebar.selectbox('Select Country',option)
     country(countrys)
+st.markdown('### Check below for comapring two countries')
 k=st.checkbox('Compare Two Countries')
 if k:
     option=list(data.location.unique())
@@ -273,57 +326,22 @@ if k:
     country_1 = st.selectbox('Select 1st Country',option)
     country_2 = st.selectbox('Select 2nd Country',option)
     if country_1==country_2:
-        st.markdown("Select 2 different countries")
+        st.markdown("Select 2 different countries!!!")
     else:
-        st.markdown("## Comparison between {} and {}".format(country_1,country_2))
-        y1=[covid_2.get_status_by_country_name(country_1)['confirmed'],covid_2.get_status_by_country_name(country_1)  ['active'],covid_2.get_status_by_country_name(country_1)['deaths'],covid_2.get_status_by_country_name(country_1)['total_tests']]
-        y2=[covid_2.get_status_by_country_name(country_1)['confirmed'],covid_2.get_status_by_country_name(country_2)['active'],covid_2.get_status_by_country_name(country_2)['deaths'],covid_2.get_status_by_country_name(country_2)['total_tests']]
-        y1=np.log(y1)
-        y2=np.log(y2)
-        fig_l = go.Figure(data=[
-        go.Bar(name=country_1, x=['confirmed','active','deaths','total tests'], y=y1),
-        go.Bar(name=country_2, x=['confirmed','active','deaths','total tests'], y=y2)
-        ])
-        fig_l.update_layout(barmode='group')
-        st.plotly_chart(fig_l)
-        st.markdown('### Trend of Total Cases per million')
-        d1=data.loc[data['location'] == country_1]
-        d2=data.loc[data['location'] == country_2]
-        y_2=d1['total_cases_per_million']
-        y_3=d2['total_cases_per_million']
-        d1['ndate'] = pd.to_datetime(d1['date'])
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=d1['ndate'], y=y_2,
-                    mode='lines',
-                    name=country_1,fill='tonexty'))
-        fig.add_trace(go.Scatter(x=d1['ndate'], y=y_3,
-                    mode='lines', name=country_2,fill='tozeroy'))
-        st.plotly_chart(fig)
-        st.markdown('### Trend of Total Deaths per million')
-        y_2=d1['total_deaths_per_million']
-        y_3=d2['total_deaths_per_million']
-        d1['ndate'] = pd.to_datetime(d1['date'])
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=d1['ndate'], y=y_2,
-                    mode='lines',
-                    name=country_1,fill='tonexty'))
-        fig.add_trace(go.Scatter(x=d1['ndate'], y=y_3,
-                    mode='lines', name=country_2,fill='tozeroy'))
-        st.plotly_chart(fig)
-        st.markdown('### Trend of Total Tests per thousand')
-        y_2=d1['total_tests_per_thousand']
-        y_3=d2['total_tests_per_thousand']
-        d1['ndate'] = pd.to_datetime(d1['date'])
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=d1['ndate'], y=y_2,
-                    mode='lines',
-                    name=country_1,fill='tonexty'))
-        fig.add_trace(go.Scatter(x=d1['ndate'], y=y_3,
-                    mode='lines', name=country_2,fill='tozeroy'))
-        st.plotly_chart(fig)
+        compare_country(country_1,country_2)
+About_text='''Coronaviruses (CoV) are a large family of viruses that cause illness ranging from the common cold to more severe diseases such as Middle East Respiratory Syndrome (MERS-CoV) and Severe Acute Respiratory Syndrome (SARS-CoV). A novel coronavirus (nCoV) is a new strain that has not been previously identified in humans.
+
+Coronaviruses are zoonotic, meaning they are transmitted between animals and people. Detailed investigations found that SARS-CoV was transmitted from civet cats to humans and MERS-CoV from dromedary camels to humans. Several known coronaviruses are circulating in animals that have not yet infected humans.
+
+Common signs of infection include respiratory symptoms, fever, cough, shortness of breath and breathing difficulties. In more severe cases, infection can cause pneumonia, severe acute respiratory syndrome, kidney failure and even death.
+
+Standard recommendations to prevent infection spread include regular hand washing, covering mouth and nose when coughing and sneezing, thoroughly cooking meat and eggs. Avoid close contact with anyone showing symptoms of respiratory illness such as coughing and sneezing.'''
 About_video='''<iframe width="388" height="315" src="https://www.youtube.com/embed/mOV1aBVYKGA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'''
-st.markdown('### About covid-19 by WHO')
+st.markdown('## About covid-19 by WHO')
+st.markdown(About_text,unsafe_allow_html=True)
+st.markdown('### Covid-19: video by WHO')
 st.markdown(About_video,unsafe_allow_html=True)
+st.markdown('Subscribe for newsletter from WHO')
 st.markdown('<a href="https://confirmsubscription.com/h/d/18DFE0FD1CC9DA69" target="_blank">Subscribe to WHO newsletter</a>',unsafe_allow_html=True)
 st.write('**As different countries are at different time zones, the data may not be upto date but it is made as accurate as possible')
 
