@@ -115,7 +115,6 @@ def country(countrys):
     
     if st.checkbox("Show raw data", False):
         st.subheader("Raw data of {} from {} to {}".format(countrys,start_date,end_date))
-        dataframe.style.highlight_max(axis=0)
         st.dataframe(d.fillna('Not available'))
 def map(s,t,by,on):
     st.text(' *The value while hovering over the countries are log values of actual numebers. This is to get an accurate and understandale seperation from all the countries.')
