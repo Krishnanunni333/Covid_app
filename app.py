@@ -76,25 +76,25 @@ def country_details(t):
     img = img.resize(newsize)
     st.image(img)
     st.markdown('**_All data as of_** : {}'.format(recent_date.strftime('%Y-%m-%d')))
-    st.markdown('**Covid-19 Death rate** : {}'.format(np.array(t['cvd_death_rate'].dropna())[-1]))
-    st.markdown('**Cumilative cases** : {}'.format(np.max(t['total_cases'].dropna())))
-    st.markdown('**Cumilative deaths** : {}'.format(np.max(t['total_deaths'].dropna())))
-    st.markdown('**Cumilative Tests** : {}'.format(np.max(t['total_tests'].dropna())))
-    st.markdown('**Total test Units** : {}'.format(np.max(t['tests_units'].dropna())))
-    st.markdown('**Stringency index** : {}'.format(np.array(t['stringency_index'].fillna('Information not availale'))[-1]))
-    st.markdown('**Handwashing facilities** : {}'.format(np.array(t['handwashing_facilities'].fillna('Information not availale'))[-1]))
-    st.markdown('**Hospital beds per thousand** : {}'.format(np.array(t['hospital_beds_per_thousand'].fillna('Information not availale'))[-1]))
-    st.markdown('**Life expectancy** : {}'.format(np.array(t['life_expectancy'].dropna())[-3]))
-    st.markdown('**GDP per Capita** : {}'.format(np.array(t['gdp_per_capita'].dropna())[-3]))
-    st.markdown('**Population** : {}'.format(np.array(t['population'].dropna())[-3]))
-    st.markdown('**Population density** : {}'.format(np.array(t['population_density'].dropna())[-3]))
-    st.markdown('**Median Age** : {}'.format(np.array(t['median_age'].dropna())[-3]))
-    st.markdown('**Diabetes prevalence** : {}'.format(np.array(t['diabetes_prevalence'].dropna())[-3]))
-    st.markdown('**Female smokers** : {}'.format(np.array(t['female_smokers'].fillna('Information not availale'))[-3]))
-    st.markdown('**Male smokers** : {}'.format(np.array(t['male_smokers'].fillna('Information not availale'))[-1]))
-    st.markdown('**Aged 65 older** : {}'.format(np.array(t['aged_65_older'].fillna('Information not availale'))[-1]))
-    st.markdown('**Aged 70 older** : {}'.format(np.array(t['aged_70_older'].fillna('Information not availale'))[-1]))
-    st.markdown('**Extreme poverty** : {}'.format(np.array(t['extreme_poverty'].fillna('Information not availale'))[-1]))
+    st.markdown('**Covid-19 Death rate** : {}'.format('Information not availale or the country has no deaths yet.' if np.max(t['cvd_death_rate'].dropna()) is np.nan else np.max(t['cvd_death_rate'].dropna())))
+    st.markdown('**Cumilative cases** : {}'.format('Information not availale or the country has no cases yet.' if np.max(t['total_cases'].dropna()) is np.nan else np.max(t['total_cases'].dropna())))
+    st.markdown('**Cumilative deaths** : {}'.format('Information not availale or the country has no deaths yet.' if np.max(t['total_deaths'].dropna()) is np.nan else np.max(t['total_deaths'].dropna())))
+    st.markdown('**Cumilative Tests** : {}'.format('Information not availale.' if np.max(t['total_tests'].dropna()) is np.nan else np.max(t['total_tests'].dropna())))
+    st.markdown('**Total test Units** : {}'.format('Information not availale.' if np.max(t['tests_units'].dropna()) is np.nan else np.max(t['tests_units'].dropna())))
+    st.markdown('**Stringency index** : {}'.format('Information not availale.' if np.max(t['stringency_index'].dropna()) is np.nan else np.max(t['stringency_index'].dropna())))
+    st.markdown('**Handwashing facilities** : {}'.format('Information not availale.' if np.max(t['handwashing_facilities'].dropna()) is np.nan else np.max(t['handwashing_facilities'].dropna())))
+    st.markdown('**Hospital beds per thousand** : {}'.format('Information not availale.' if np.max(t['hospital_beds_per_thousand'].dropna()) is np.nan else np.max(t['hospital_beds_per_thousand'].dropna())))
+    st.markdown('**Life expectancy** : {}'.format('Information not availale.' if np.max(t['life_expectancy'].dropna()) is np.nan else np.max(t['life_expectancy'].dropna())))
+    st.markdown('**GDP per Capita** : {}'.format('Information not availale.' if np.max(t['gdp_per_capita'].dropna()) is np.nan else np.max(t['gdp_per_capita'].dropna())))
+    st.markdown('**Population** : {}'.format('Information not availale.' if np.max(t['population'].dropna()) is np.nan else np.max(t['population'].dropna())))
+    st.markdown('**Population density** : {}'.format('Information not availale.' if np.max(t['population_density'].dropna()) is np.nan else np.max(t['population_density'].dropna())))
+    st.markdown('**Median Age** : {}'.format('Information not availale.' if np.max(t['median_age'].dropna()) is np.nan else np.max(t['median_age'].dropna())))
+    st.markdown('**Diabetes prevalence** : {}'.format('Information not availale.' if np.max(t['diabetes_prevalence'].dropna()) is np.nan else np.max(t['diabetes_prevalence'].dropna())))
+    st.markdown('**Female smokers** : {}'.format('Information not availale.' if np.max(t['female_smokers'].dropna()) is np.nan else np.max(t['female_smokers'].dropna())))
+    st.markdown('**Male smokers** : {}'.format('Information not availale.' if np.max(t['male_smokers'].dropna()) is np.nan else np.max(t['male_smokers'].dropna())))
+    st.markdown('**Aged 65 older** : {}'.format('Information not availale.' if np.max(t['aged_65_older'].dropna()) is np.nan else np.max(t['aged_65_older'].dropna())))
+    st.markdown('**Aged 70 older** : {}'.format('Information not availale.' if np.max(t['aged_70_older'].dropna()) is np.nan else np.max(t['aged_70_older'].dropna())))
+    st.markdown('**Extreme poverty** : {}'.format('Information not availale.' if np.max(t['extreme_poverty'].dropna()) is np.nan else np.max(t['extreme_poverty'].dropna())))
 def country(countrys):
     d=data[data['location']==countrys]
     st.subheader('Country wise analysis')
@@ -126,7 +126,7 @@ def map(s,t,by,on):
     locations = s['iso_code'],
     z = k,
     text = s['location'],
-    colorscale = 'Blues',
+    colorscale = 'Picnic',
     autocolorscale=False,
     reversescale=True,
     marker_line_color='darkgray',
@@ -241,9 +241,26 @@ def daily():
     st.markdown('## <span style="color:#B10618 "><b> {} </b> total deaths</span>'.format(int(present[present['location']=='World'].values[0][6])),unsafe_allow_html=True)
     st.markdown('## <span style="color:#07860E"><b> {} </b> total recovered</span>'.format(covid.get_total_recovered()),unsafe_allow_html=True)
     st.markdown('## <span style="color:#73257A "><b> {} </b> total active cases</span>'.format(covid.get_total_active_cases()),unsafe_allow_html=True)  
-    present=data[data['date']==yesterday.strftime('%Y-%m-%d')]
-    st.sidebar.markdown('## **Top 5 countries based number of confirmed cases as of {}**'.format(yesterday))
-    st.sidebar.table((present.sort_values('total_cases',ascending = False)[['location','total_cases']]).set_index('location').iloc[1:6,:])
+    present=data[data['date']==yesterday.strftime('%Y-%m-%d')].sort_values('total_cases',ascending = False)
+    present=present.iloc[1:6]
+    present=present[['location','total_cases']]
+    st.sidebar.markdown('## **Top 5 countries based on number of confirmed cases as of {}**'.format(yesterday))
+    fig = go.Figure(data=[go.Table(
+    header=dict(
+    values=["<b>Country</b>", "<b>Total cases</b>"],
+    line_color='darkslategray', fill_color='royalblue',
+    align='center', font=dict(color='white', size=15)
+    ),
+    cells=dict(
+    values=[present.location, present.total_cases],
+    line_color='darkslategray', fill_color='lightcyan',
+    align='center', font=dict(color='black', size=14)
+    ))
+    ])
+    fig.update_layout(width=350, height=400)
+    fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)')
+    st.sidebar.plotly_chart(fig)
 daily()
 def compare_country(country_1,country_2):
     st.markdown("## Comparison between {} and {}".format(country_1,country_2))
@@ -350,5 +367,6 @@ st.markdown(About_video,unsafe_allow_html=True)
 st.markdown('Subscribe for newsletter from WHO')
 st.markdown('<a href="https://confirmsubscription.com/h/d/18DFE0FD1CC9DA69" target="_blank">Subscribe to WHO newsletter</a>',unsafe_allow_html=True)
 st.write('**As different countries are at different time zones, the data may not be upto date but it is made as accurate as possible')
+
 
 
