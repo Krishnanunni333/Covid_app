@@ -102,10 +102,6 @@ def country(countrys):
     new_cases_new_deaths(d)
     st.markdown(' #### Trend of new tests performed in {}  from {} to {}'.format(countrys,start_date,end_date))
     new_test(d)
-    
-    if st.checkbox("Show raw data", False):
-        st.subheader("Raw data of {} from {} to {}".format(countrys,start_date,end_date))
-        st.dataframe(d.fillna('Not available'))
 def map(s,t,by,on,p):
     st.markdown(' * The value while hovering over the countries are log values of actual numbers. This is to get an accurate and understandable separation from all the countries.')
     if pd.isnull(s[t]).all():
