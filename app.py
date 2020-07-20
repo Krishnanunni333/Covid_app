@@ -109,7 +109,7 @@ def country(countrys):
 def map(s,t,by,on,p):
     st.markdown(' * The value while hovering over the countries are log values of actual numbers. This is to get an accurate and understandable separation from all the countries.')
     if pd.isnull(s[t]).all():
-        st.write('No data updated now on it, you can try previous days map')
+        st.write('No data updated now on it, you can try with previous dates.')
     else:
         k=np.log(s[t])
         options = ("orthographic","equirectangular")
@@ -387,6 +387,27 @@ if k:
         st.markdown("Select 2 different countries!!!")
     else:
         compare_country(country_1,country_2)
+def clinics():
+    return pd.read_csv('SearchResults (1).csv')
+clinic=clinics()
+st.markdown("# Recent top 10 details of clinical trials and medicines.")
+st.text("This data is updated once in a week")
+fig = go.Figure(data=[go.Table(
+    header=dict(
+    values=["<b>Rank</b>", "<b>Title</b>","<b>Status</b>", "<b>Study Results</b>","<b>Conditions</b>", "<b>Interventions</b>","<b>Locations</b>",],
+    line_color='darkslategray', fill_color='royalblue',
+    align='center', font=dict(color='white', size=11)
+    ),
+    cells=dict(
+    values=[clinic.Rank, clinic.Title,clinic.Status, clinic['Study Results'],clinic.Conditions, clinic.Interventions,clinic.Locations, ],
+    line_color='darkslategray', fill_color='lightcyan',
+    align='center', font=dict(color='black', size=10)
+    ))
+    ])
+fig.update_layout(width=800, height=600,title="Clinical details")
+fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)')
+st.plotly_chart(fig)
 html='''#### <span style="color:red">Why is data on testing important?</span>
 No country knows the total number of people infected with COVID-19. All we know is the infection status of those who have been tested. All those who have a lab-confirmed infection are counted as confirmed cases.
 
