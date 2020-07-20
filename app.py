@@ -301,40 +301,40 @@ def compare_country(country_1,country_2):
     y_2=d1['new_tests']
     y_3=d2['new_tests']
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=d1['ndate'], y=np.log(y_2),
+    fig.add_trace(go.Scatter(x=d1['ndate'], y=y_2,
                     mode='lines',
                     name=country_1,fill='tonexty'))
-    fig.add_trace(go.Scatter(x=d2['ndate'], y=np.log(y_3),
+    fig.add_trace(go.Scatter(x=d2['ndate'], y=y_3,
                     mode='lines', name=country_2,fill='tozeroy'))
     st.plotly_chart(fig)
     st.markdown('### Trend of Total Cases per million')
     y_2=d1['total_cases_per_million']
     y_3=d2['total_cases_per_million']
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=d1['ndate'], y=np.log(y_2),
+    fig.add_trace(go.Scatter(x=d1['ndate'], y=y_2,
                     mode='lines',
                     name=country_1,fill='tonexty'))
-    fig.add_trace(go.Scatter(x=d2['ndate'], y=np.log(y_3),
+    fig.add_trace(go.Scatter(x=d2['ndate'], y=y_3,
                     mode='lines', name=country_2,fill='tozeroy'))
     st.plotly_chart(fig)
     st.markdown('### Trend of Total Deaths per million')
     y_2=d1['total_deaths_per_million']
     y_3=d2['total_deaths_per_million']
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=d1['ndate'], y=np.log(y_2),
+    fig.add_trace(go.Scatter(x=d1['ndate'], y=y_2,
                     mode='lines',
                     name=country_1,fill='tonexty'))
-    fig.add_trace(go.Scatter(x=d2['ndate'], y=np.log(y_3),
+    fig.add_trace(go.Scatter(x=d2['ndate'], y=y_3,
                     mode='lines', name=country_2,fill='tozeroy'))
     st.plotly_chart(fig)
     st.markdown('### Trend of Total Tests per thousand')
     y_2=d1['total_tests_per_thousand']
     y_3=d2['total_tests_per_thousand']
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=d1['ndate'], y=np.log(y_2),
+    fig.add_trace(go.Scatter(x=d1['ndate'], y=y_2,
                     mode='lines',
                     name=country_1,fill='tonexty'))
-    fig.add_trace(go.Scatter(x=d2['ndate'], y=np.log(y_3),
+    fig.add_trace(go.Scatter(x=d2['ndate'], y=y_3,
                     mode='lines', name=country_2,fill='tozeroy'))
     st.plotly_chart(fig)
 st.markdown('# Global Analysis')
