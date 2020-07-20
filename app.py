@@ -107,7 +107,7 @@ def country(countrys):
         st.subheader("Raw data of {} from {} to {}".format(countrys,start_date,end_date))
         st.dataframe(d.fillna('Not available'))
 def map(s,t,by,on,p):
-    st.markdown(' * The value while hovering over the countries are log values of actual numbers. This is to get an accurate and understandale seperation from all the countries.')
+    st.markdown(' * The value while hovering over the countries are log values of actual numbers. This is to get an accurate and understandable separation from all the countries.')
     if pd.isnull(s[t]).all():
         st.write('No data updated now on it, you can try previous days map')
     else:
