@@ -64,7 +64,6 @@ def country_details(t):
     img = img.resize(newsize)
     st.image(img)
     st.markdown('**_All data as of_** : {}'.format(recent_date.strftime('%Y-%m-%d')))
-    st.markdown('**Covid-19 Death rate** : {}'.format('Information not available or the country has no deaths yet.' if np.max(t['cvd_death_rate'].dropna()) is np.nan else np.max(t['cvd_death_rate'].dropna())))
     st.markdown('**Cumilative cases** : {}'.format('Information not available or the country has no cases yet.' if np.max(t['total_cases'].dropna()) is np.nan else np.max(t['total_cases'].dropna())))
     st.markdown('**Cumilative deaths** : {}'.format('Information not available or the country has no deaths yet.' if np.max(t['total_deaths'].dropna()) is np.nan else np.max(t['total_deaths'].dropna())))
     st.markdown('**Cumilative Tests** : {}'.format('Information not available.' if np.max(t['total_tests'].dropna()) is np.nan else np.max(t['total_tests'].dropna())))
@@ -85,6 +84,7 @@ def country_details(t):
     st.markdown('**Aged 65 older** : {}'.format('Information not available.' if np.max(t['aged_65_older'].dropna()) is np.nan else np.max(t['aged_65_older'].dropna())))
     st.markdown('**Aged 70 older** : {}'.format('Information not available.' if np.max(t['aged_70_older'].dropna()) is np.nan else np.max(t['aged_70_older'].dropna())))
     st.markdown('**Extreme poverty** : {}'.format('Information not available.' if np.max(t['extreme_poverty'].dropna()) is np.nan else np.max(t['extreme_poverty'].dropna())))
+    st.markdown('**Covid-19 Death rate** : {}'.format('Information not available or the country has no deaths yet.' if np.max(t['cardiovasc_death_rate'].dropna()) is np.nan else np.max(t['cardiovasc_death_rate'].dropna())))
 def country(countrys):
     d=data[data['location']==countrys]
     st.subheader('Country wise analysis')
