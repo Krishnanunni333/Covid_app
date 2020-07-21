@@ -210,7 +210,7 @@ recent_date =pd.to_datetime(data['date']).max()
 yesterday = date.today() - timedelta(days=1)
 current_time = time.localtime()
 current_time = time.strftime("%H:%M:%S", current_time)
-if datetime.strptime(current_time, '%H:%M:%S').time()>=datetime.strptime('15:00:00', '%H:%M:%S').time():
+if datetime.strptime(current_time, '%H:%M:%S').time()>=datetime.strptime('10:00:00', '%H:%M:%S').time():
     recent_date =pd.to_datetime(data['date']).max()
 else:
     recent_date =date.today() - timedelta(days=1)
