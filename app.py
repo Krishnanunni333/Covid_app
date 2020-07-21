@@ -27,7 +27,7 @@ st.markdown('This app uses daily cases, deaths, and testing (limited) statistics
             Covid python package</a>, <a href="https://www.worldometers.info/" target="_blank">\
             worldometers</a> and <a href="https://www.who.int/" target="_blank">\
             WHO.</a>',unsafe_allow_html=True)
-#@st.cache(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True)
 def load_data():
     data = pd.read_csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv')
     return data
@@ -210,7 +210,7 @@ recent_date =pd.to_datetime(data['date']).max()
 yesterday = date.today() - timedelta(days=1)
 current_time = time.localtime()
 current_time = time.strftime("%H:%M:%S", current_time)
-if datetime.strptime(current_time, '%H:%M:%S').time()>=datetime.strptime('10:00:00', '%H:%M:%S').time():
+if datetime.strptime(current_time, '%H:%M:%S').time()>=datetime.strptime('15:00:00', '%H:%M:%S').time():
     recent_date =pd.to_datetime(data['date']).max()
 else:
     recent_date =date.today() - timedelta(days=1)
@@ -383,11 +383,11 @@ if k:
         st.markdown("Select 2 different countries!!!")
     else:
         compare_country(country_1,country_2)
+@st.cache
 def clinics():
-    return pd.read_csv('SearchResults (1).csv')
+    return pd.read_csv('https://clinicaltrials.gov/ct2/results/download_fields?cond=covid&down_count=10&down_fmt=csv')
 clinic=clinics()
 st.markdown("# Recent top 10 details of clinical trials and medicines.")
-st.text("This data is updated once in a week")
 fig = go.Figure(data=[go.Table(
     header=dict(
     values=["<b>Rank</b>", "<b>Title</b>","<b>Status</b>", "<b>Study Results</b>","<b>Conditions</b>", "<b>Interventions</b>","<b>Locations</b>",],
@@ -428,6 +428,7 @@ st.markdown(About_video,unsafe_allow_html=True)
 st.markdown('Subscribe for newsletter from WHO')
 st.markdown('<a href="https://confirmsubscription.com/h/d/18DFE0FD1CC9DA69" target="_blank">Subscribe to WHO newsletter</a>',unsafe_allow_html=True)
 st.write('**As different countries are at different time zones, the data may not be upto date but it is made as accurate as possible')
+
 
 
 
