@@ -27,7 +27,7 @@ st.markdown('This app uses daily cases, deaths, and testing (limited) statistics
             Covid python package</a>, <a href="https://www.worldometers.info/" target="_blank">\
             worldometers</a> and <a href="https://www.who.int/" target="_blank">\
             WHO.</a>',unsafe_allow_html=True)
-@st.cache(allow_output_mutation=True)
+#@st.cache(allow_output_mutation=True)
 def load_data():
     data = pd.read_csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv')
     return data
