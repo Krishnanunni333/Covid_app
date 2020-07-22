@@ -27,7 +27,7 @@ st.markdown('This app uses daily cases, deaths, and testing (limited) statistics
             Covid python package</a>, <a href="https://www.worldometers.info/" target="_blank">\
             worldometers</a> and <a href="https://www.who.int/" target="_blank">\
             WHO.</a>',unsafe_allow_html=True)
-@st.cache(allow_output_mutation=True)
+#@st.cache(allow_output_mutation=True)
 def load_data():
     data = pd.read_csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv')
     return data
@@ -383,7 +383,6 @@ if k:
         st.markdown("Select 2 different countries!!!")
     else:
         compare_country(country_1,country_2)
-@st.cache
 def clinics():
     return pd.read_csv('https://clinicaltrials.gov/ct2/results/download_fields?cond=covid&down_count=10&down_fmt=csv')
 clinic=clinics()
